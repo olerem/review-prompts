@@ -1,7 +1,7 @@
 # Review Prompts for AI-Assisted Code Review
 
-AI-assisted code review prompts for Linux kernel, systemd, and iproute development.
-Works with Claude Code and other AI tools.
+AI-assisted code review prompts for Linux kernel, barebox, systemd, and iproute
+development.  Works with Claude Code and other AI tools.
 
 ## Quick Start
 
@@ -20,12 +20,14 @@ executed with `-h|--help` option.
 | Project | Review | Debug | Verify |
 |---------|--------|-------|--------|
 | Kernel | `/kreview` | `/kdebug` | `/kverify` |
+| barebox | `/breview` | `/bdebug` | `/bverify` |
 | systemd | `/systemd-review` | `/systemd-debug` | `/systemd-verify` |
 | iproute | `/iproute-review` | `/iproute-debug` | `/iproute-verify` |
 
 ## Project Documentation
 
 * [Kernel Review Prompts](kernel/README.md) - Linux kernel specific patterns and protocols
+* [barebox Review Prompts](barebox/README.md) - an overlay on the kernel prompts, carrying only what differs in barebox
 * [systemd Review Prompts](systemd/README.md) - systemd specific patterns and protocols
 * [iproute Review Prompts](iproute/README.md) - iproute specific patterns and protocols
 
@@ -38,8 +40,13 @@ Each project has:
 
 The skills detect your working directory and load appropriate context:
 - In a kernel tree: kernel skill loads automatically
+- In a barebox tree: barebox skill loads automatically
 - In a systemd tree: systemd skill loads automatically
 - In an iproute tree: iproute skill loads automatically
+
+barebox is the exception to "each project has": it is an overlay, not a
+standalone set.  It carries only the barebox deltas and reads the generic
+protocol from `kernel/`.
 
 ## Structure
 
@@ -51,6 +58,14 @@ review-prompts/
 │   ├── scripts/              # Setup script and utilities
 │   ├── patterns/             # Bug pattern documentation
 │   └── *.md                  # Subsystem and protocol files
+│
+├── barebox/                   # barebox prompts (overlay on kernel/)
+│   ├── skills/               # Skill template
+│   ├── slash-commands/       # /breview, /bdebug, /bverify, /bseries,
+│   │                         #   /bcocci, /borcreview
+│   ├── subsystem/            # barebox-specific guides + kernel guide index
+│   ├── deltas.md             # Where barebox differs from Linux
+│   └── *.md                  # Overlay entry points; no scripts/ here
 │
 ├── systemd/                   # systemd prompts
 │   ├── skills/               # Skill template
